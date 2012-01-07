@@ -10,19 +10,3 @@ Automatically show a simple list of your WORD/PDF attachments under the content 
 == Description ==
 
 Automatically show a simple list of your WORD/PDF attachments under the content of posts and pages!
-
-== Development Blog ==
-
-[MMweb360](http://milesimarco.altervista.org/wp-attachments/ "Wp attachments")
-
-== Installation ==
-
-None.
-
-== Screenshots ==
-
-None.
-
-== Frequently Asked Questions ==
-
-None.
