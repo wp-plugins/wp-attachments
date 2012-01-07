@@ -1,3 +1,4 @@
+<?php  
 /*
 Plugin Name: WP-Attachments
 Plugin URI: http://www.milesimarco.altervista.org/wp-attachments
@@ -6,8 +7,6 @@ Author: Marco Milesi
 Version: 1.0
 Author URI: http://www.milesimarco.altervista.org/
 */
-
-<?php  
   
 add_filter( 'the_content', 'my_the_content_filter' );
 function my_the_content_filter( $content ) {
