@@ -1,4 +1,3 @@
-<?php
 /*
 Plugin Name: WP-Attachments
 Plugin URI: http://www.milesimarco.altervista.org/wp-attachments
