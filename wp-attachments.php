@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.0.4
+Version: 3.1
 Author URI: http://marcomilesi.ml
 */
 
@@ -62,11 +62,10 @@ function wpatt_job_cpt_template_filter($content)
     
     if ($attachments)
         {
-        
         $content .= '<div style="width:100%;float:left;margin:10px 0 10px 0;"><h3>' . get_option('wpatt_option_localization') . '</h3>
 	<style>
 	ul.post-attachments{list-style:none;margin:0;}
-	li.post-attachment{background:url(' . plugin_dir_url(__FILE__) . 'icons/document.png) 0 4px no-repeat;padding-left:24px}	.post-attachment.mime-imagejpeg,.post-attachment.mime-imagepng{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-image.png)}
+	li.post-attachment{background:url(' . plugin_dir_url(__FILE__) . 'icons/document.png) 0 4px no-repeat;padding-left:24px}	.post-attachment.mime-imagejpeg,.post-attachment.mime-imagepng,.post-attachment.mime-imagejpeg,.post-attachment.mime-imagegif{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-image.png)}
 	.post-attachment.mime-applicationzip{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-zipper.png)}
 	.post-attachment.mime-applicationpdf{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-pdf.png)}
 	.post-attachment.mime-applicationvnd-ms-excel{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-excel.png)}
@@ -78,11 +77,17 @@ function wpatt_job_cpt_template_filter($content)
         foreach ($attachments as $attachment)
             {
             
+			$wpatt_option_includeimages_get = get_option('wpatt_option_includeimages');
+			if ($wpatt_option_includeimages_get == '1') {
+			} else if ( wp_attachment_is_image( $attachment->ID ) ) {
+				continue;
+			}
             
             $class = "post-attachment mime-" . sanitize_title($attachment->post_mime_type);
             
             $content .= '<li class="' . $class . '"><a href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . wpatt_format_bytes(filesize(get_attached_file($attachment->ID)));
-            
+
+  
             $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
             
             if ($wpatt_option_showdate_get == '1')
@@ -114,6 +119,8 @@ function wpatt_reg_settings()
     {
     
     register_setting('wpatt_options_group', 'wpatt_option_showdate', 'intval');
+	
+	register_setting('wpatt_options_group', 'wpatt_option_includeimages', 'intval');
     
     register_setting('wpatt_options_group', 'wpatt_option_localization');
     
@@ -161,31 +168,24 @@ function wpatt_plugin_options()
     
     
     
-    if (isset($_POST['Submit']))
-        {
+    if (isset($_POST['Submit'])) {
         
         $wpatt_option_localization_get = $_POST["wpatt_option_localization_n"];
         
         update_option('wpatt_option_localization', $wpatt_option_localization_get);
         
-        
-        
-        if (isset($_POST['wpatt_option_showdate_n']))
-            {
-            
-            update_option('wpatt_option_showdate', '1');
-            
-            }
-        else
-            {
-            
-            update_option('wpatt_option_showdate', '0');
-            
-            }
-        
-        
-        
-        }
+        if (isset($_POST['wpatt_option_showdate_n'])) {
+			update_option('wpatt_option_showdate', '1');
+		} else {
+			update_option('wpatt_option_showdate', '0');
+		}
+       
+	    if (isset($_POST['wpatt_option_includeimages_n'])) {
+            update_option('wpatt_option_includeimages', '1');
+		} else {
+			update_option('wpatt_option_includeimages', '0');
+		}
+	}
     
     
     
@@ -193,7 +193,8 @@ function wpatt_plugin_options()
     
     screen_icon();
     
-    echo '<h2>Settings</h2>';
+    echo '<h2>WP Attachments</h2>';
+	echo '<h3>OPTIONS</h3>';
     
     echo '<div id="welcome-panel" class="welcome-panel">';
     
@@ -217,30 +218,34 @@ function wpatt_plugin_options()
     
     echo '" />&nbsp;Insert here the label you want to use for the title of the attachments list. Default "<b>Attachments</b>"</td></tr>';
     
-    
-    
-    echo '<tr><th scope="row">Show date?</th>
+        echo '<tr><th scope="row">Include Images?</th>
+        <td><input type="checkbox" name="wpatt_option_includeimages_n" ';
+    $wpatt_option_includeimages_get = get_option('wpatt_option_includeimages');
+    if ($wpatt_option_includeimages_get == '1') {
+		echo 'checked=\'checked\'';
+	}
+    echo '/>&nbsp;Check this if you want to include images (.jpg, .jpeg, .gif, .png) from being listed.</td>';
+    echo '</tr>';
 
+	
+    echo '<tr><th scope="row">Show date?</th>
         <td><input type="checkbox" name="wpatt_option_showdate_n" ';
-    
     $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
-    
-    if ($wpatt_option_showdate_get == '1')
-        {
-        
-        echo 'checked=\'checked\'';
-        
-        }
-    
+    if ($wpatt_option_showdate_get == '1') {
+		echo 'checked=\'checked\'';
+	}
     echo '/>&nbsp;Check this if you want to show when the file has been uploaded.</td>';
-    
     echo '</tr></table>';
     
     
     
-    echo '</table><p class="submit"><input type="submit" name="Submit" value="Update" /></p>';
+    echo '</table><p class="submit"><input type="submit" class="button-primary" name="Submit" value="Update" /></p>';
     
-    echo '</form></div></div>';
+    echo '</form></div>
+	<h3>HELP, SUPPORT & FEEDBACK</h3>
+	<a href="http://wordpress.org/plugins/wp-attachments/" title "WP Attachments Wordpress Plugin>http://wordpress.org/plugins/wp-attachments/</a><br/>
+	This plugin is continuously developed by Marco Milesi focusing on semplicity, intuitiveness and cleanness. Keep updated :)<br/>
+	Thank You for using this plugin.</div>';
     
     }
 
