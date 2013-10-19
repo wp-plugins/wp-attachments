@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.1
+Version: 3.1.1
 Author URI: http://marcomilesi.ml
 */
 
@@ -52,7 +52,8 @@ add_filter('the_content', 'wpatt_job_cpt_template_filter');
 function wpatt_job_cpt_template_filter($content)
     {
     global $post;
-    
+    $somethingtoshow = 0;
+	
     $attachments = get_posts(array(
         'post_type' => 'attachment',
         'orderby' => 'menu_order',
@@ -62,7 +63,7 @@ function wpatt_job_cpt_template_filter($content)
     
     if ($attachments)
         {
-        $content .= '<div style="width:100%;float:left;margin:10px 0 10px 0;"><h3>' . get_option('wpatt_option_localization') . '</h3>
+        $content_l .= '<div style="width:100%;float:left;margin:10px 0 10px 0;"><h3>' . get_option('wpatt_option_localization') . '</h3>
 	<style>
 	ul.post-attachments{list-style:none;margin:0;}
 	li.post-attachment{background:url(' . plugin_dir_url(__FILE__) . 'icons/document.png) 0 4px no-repeat;padding-left:24px}	.post-attachment.mime-imagejpeg,.post-attachment.mime-imagepng,.post-attachment.mime-imagejpeg,.post-attachment.mime-imagegif{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-image.png)}
@@ -82,10 +83,11 @@ function wpatt_job_cpt_template_filter($content)
 			} else if ( wp_attachment_is_image( $attachment->ID ) ) {
 				continue;
 			}
-            
+            $somethingtoshow = 1;
+			
             $class = "post-attachment mime-" . sanitize_title($attachment->post_mime_type);
             
-            $content .= '<li class="' . $class . '"><a href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . wpatt_format_bytes(filesize(get_attached_file($attachment->ID)));
+            $content_l .= '<li class="' . $class . '"><a href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . wpatt_format_bytes(filesize(get_attached_file($attachment->ID)));
 
   
             $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
@@ -95,17 +97,22 @@ function wpatt_job_cpt_template_filter($content)
                 
                 $wpatt_date = new DateTime($attachment->post_date);
                 
-                $content .= '<div style="float:right;">' . $wpatt_date->format('d.m.Y') . '</div>';
+                $content_l .= '<div style="float:right;">' . $wpatt_date->format('d.m.Y') . '</div>';
                 
                 }
             
-            $content .= ')</li>';
+            $content_l .= ')</li>';
             
             }
-        $content .= '</ul></div>';
+        $content_l .= '</ul></div>';
         
         }
-    return $content;
+		if ($somethingtoshow == 1) {
+			$content .= $content_l;
+			return $content_l;
+		} else {
+			return $content;
+		}
     
     }
 
