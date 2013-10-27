@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.1.1
+Version: 3.1.2
 Author URI: http://marcomilesi.ml
 */
 
@@ -109,15 +109,21 @@ function wpatt_job_cpt_template_filter($content)
         }
 		if ($somethingtoshow == 1) {
 			$content .= $content_l;
-			return $content_l;
-		} else {
-			return $content;
 		}
-    
+    return $content;
     }
 
 
 
+/* Enable Backend? */
+dd_action( 'init', 'WPATT_FUNCTIONSLOAD');
+
+function WPATT_FUNCTIONSLOAD () {
+	$get_wpatt_disable_backend = get_option('wpatt_disable_backend');
+	if ($get_wpatt_disable_backend == '1') {
+		include(plugin_dir_path(__FILE__) . 'backend.php');
+	}
+}
 /* Register Settings */
 
 add_action('admin_init', 'wpatt_reg_settings');
@@ -130,6 +136,8 @@ function wpatt_reg_settings()
 	register_setting('wpatt_options_group', 'wpatt_option_includeimages', 'intval');
     
     register_setting('wpatt_options_group', 'wpatt_option_localization');
+	
+	register_setting('wpatt_options_group', 'wpatt_disable_backend');
     
     /* Preopulate 'Attachments' */
     
@@ -137,11 +145,8 @@ function wpatt_reg_settings()
     
     if (get_option('wpatt_option_localization') == '')
         {
-        
         update_option('wpatt_option_localization', 'Attachments');
-        
         }
-    
     }
 
 
@@ -192,6 +197,12 @@ function wpatt_plugin_options()
 		} else {
 			update_option('wpatt_option_includeimages', '0');
 		}
+		
+		if (isset($_POST['wpatt_disable_backend_n'])) {
+            update_option('wpatt_disable_backend', '0');
+		} else {
+			update_option('wpatt_disable_backend', '1');
+		}
 	}
     
     
@@ -233,8 +244,16 @@ function wpatt_plugin_options()
 	}
     echo '/>&nbsp;Check this if you want to include images (.jpg, .jpeg, .gif, .png) from being listed.</td>';
     echo '</tr>';
-
 	
+	echo '<tr><th scope="row">Enable Back-End?</th>
+        <td><input type="checkbox" name="wpatt_disable_backends_n" ';
+    $wpatt_disable_backend_get = get_option('wpatt_disable_backend');
+    if ($wpatt_disable_backend_get == '0') {
+		echo 'checked=\'checked\'';
+	}
+    echo '/>&nbsp;Check this if you want to enable the integrated back-end functions.</td>';
+    echo '</tr>';
+
     echo '<tr><th scope="row">Show date?</th>
         <td><input type="checkbox" name="wpatt_option_showdate_n" ';
     $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
@@ -251,7 +270,7 @@ function wpatt_plugin_options()
     echo '</form></div>
 	<h3>HELP, SUPPORT & FEEDBACK</h3>
 	<a href="http://wordpress.org/plugins/wp-attachments/" title "WP Attachments Wordpress Plugin>http://wordpress.org/plugins/wp-attachments/</a><br/>
-	This plugin is continuously developed by Marco Milesi focusing on semplicity, intuitiveness and cleanness. Keep updated :)<br/>
+	This plugin is continuously developed by Marco Milesi focusing on simplicity, intuitiveness and cleanness. Keep updated :)<br/>
 	Thank You for using this plugin.</div>';
     
     }
