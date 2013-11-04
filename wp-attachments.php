@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.1.3
+Version: 3.1.4
 Author URI: http://marcomilesi.ml
 */
 
@@ -114,16 +114,6 @@ function wpatt_job_cpt_template_filter($content)
     }
 
 
-
-/* Enable Backend? */
-add_action( 'init', 'WPATT_FUNCTIONSLOAD');
-
-function WPATT_FUNCTIONSLOAD () {
-	$get_wpatt_disable_backend = get_option('wpatt_disable_backend');
-	if ($get_wpatt_disable_backend == '1') {
-		include(plugin_dir_path(__FILE__) . 'backend.php');
-	}
-}
 /* Register Settings */
 
 add_action('admin_init', 'wpatt_reg_settings');
@@ -197,12 +187,7 @@ function wpatt_plugin_options()
 		} else {
 			update_option('wpatt_option_includeimages', '0');
 		}
-		
-		if (isset($_POST['wpatt_disable_backend_n'])) {
-            update_option('wpatt_disable_backend', '0');
-		} else {
-			update_option('wpatt_disable_backend', '1');
-		}
+	
 	}
     
     
@@ -243,15 +228,6 @@ function wpatt_plugin_options()
 		echo 'checked=\'checked\'';
 	}
     echo '/>&nbsp;Check this if you want to include images (.jpg, .jpeg, .gif, .png) from being listed.</td>';
-    echo '</tr>';
-	
-	echo '<tr><th scope="row">Enable Back-End?</th>
-        <td><input type="checkbox" name="wpatt_disable_backends_n" ';
-    $wpatt_disable_backend_get = get_option('wpatt_disable_backend');
-    if ($wpatt_disable_backend_get == '0') {
-		echo 'checked=\'checked\'';
-	}
-    echo '/>&nbsp;Check this if you want to enable the integrated back-end functions.</td>';
     echo '</tr>';
 
     echo '<tr><th scope="row">Show date?</th>
