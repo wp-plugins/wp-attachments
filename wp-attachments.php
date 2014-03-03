@@ -4,14 +4,15 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.2
+Version: 3.2.1
 Author URI: http://marcomilesi.ml
 */
 
 function wpa_action_init()
 {
 	load_plugin_textdomain( 'wp-attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	update_option( 'wpa_version_number', '3.2' );
+	update_option( 'wpa_version_number', '3.2.1' );
+	wp_enqueue_style('wpa-css', plugin_dir_url(__FILE__) . 'styles/frontend.css');
 }
 
 // Add actions
@@ -74,16 +75,7 @@ function wpatt_job_cpt_template_filter($content)
     if ($attachments)
         {
         $content_l .= '<div style="width:100%;float:left;margin:10px 0 10px 0;"><h3>' . get_option('wpatt_option_localization') . '</h3>
-	<style>
-	ul.post-attachments{list-style:none;margin:0;}
-	li.post-attachment{background:url(' . plugin_dir_url(__FILE__) . 'icons/document.png) 0 4px no-repeat;padding-left:24px}	.post-attachment.mime-imagejpeg,.post-attachment.mime-imagepng,.post-attachment.mime-imagejpeg,.post-attachment.mime-imagegif{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-image.png)}
-	.post-attachment.mime-applicationzip{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-zipper.png)}
-	.post-attachment.mime-applicationpdf{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-pdf.png)}
-	.post-attachment.mime-applicationvnd-ms-excel{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-excel.png)}
-	.post-attachment.mime-applicationvnd-openxmlformats-officedocument-spreadsheetml-sheet{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-excel.png)}
-	.post-attachment.mime-applicationmsword{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-word.png)}
-	.post-attachment.mime-applicationvnd-openxmlformats-officedocument-wordprocessingml-document{background-image:url(' . plugin_dir_url(__FILE__) . 'icons/document-word.png)}
-			</style><ul class="post-attachments">';
+		<ul class="post-attachments">';
         
         foreach ($attachments as $attachment)
             {
