@@ -4,11 +4,20 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.1.4
+Version: 3.2
 Author URI: http://marcomilesi.ml
 */
 
+function wpa_action_init()
+{
+	load_plugin_textdomain( 'wp-attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+	update_option( 'wpa_version_number', '3.2' );
+}
 
+// Add actions
+add_action('init', 'wpa_action_init');
+require_once(plugin_dir_path(__FILE__) . 'settings.php');
+require_once(plugin_dir_path(__FILE__) . 'ij-post-attachments.php');
 
 function wpatt_format_bytes($a_bytes)
     {
@@ -57,6 +66,7 @@ function wpatt_job_cpt_template_filter($content)
     $attachments = get_posts(array(
         'post_type' => 'attachment',
         'orderby' => 'menu_order',
+		'order' => 'ASC',
         'posts_per_page' => 100,
         'post_parent' => $post->ID
     ));
@@ -135,120 +145,16 @@ function wpatt_reg_settings()
     
     if (get_option('wpatt_option_localization') == '')
         {
-        update_option('wpatt_option_localization', 'Attachments');
+		$value = __('Attachments','wp-attachments');
+        update_option('wpatt_option_localization', $value);
         }
     }
-
-
-
-/* Here starts the code for the option panel */
-
-
 
 add_action('admin_menu', 'wpatt_plugin_menu');
 
+function wpatt_plugin_menu(){
+	add_options_page('WP Attachments - Settings', 'WP Attachments', 'manage_options', 'wpatt-option-page', 'wpatt_plugin_options');
+}
 
-
-function wpatt_plugin_menu()
-    {
-    
-    add_options_page('WP Attachments - Settings', 'WP Attachments', 'manage_options', 'wpatt-option-page', 'wpatt_plugin_options');
-    
-    }
-
-
-
-function wpatt_plugin_options()
-    {
-    
-    if (!current_user_can('manage_options'))
-        {
-        
-        wp_die(__('You do not have sufficient permissions to access this page.'));
-        
-        }
-    
-    
-    
-    if (isset($_POST['Submit'])) {
-        
-        $wpatt_option_localization_get = $_POST["wpatt_option_localization_n"];
-        
-        update_option('wpatt_option_localization', $wpatt_option_localization_get);
-        
-        if (isset($_POST['wpatt_option_showdate_n'])) {
-			update_option('wpatt_option_showdate', '1');
-		} else {
-			update_option('wpatt_option_showdate', '0');
-		}
-       
-	    if (isset($_POST['wpatt_option_includeimages_n'])) {
-            update_option('wpatt_option_includeimages', '1');
-		} else {
-			update_option('wpatt_option_includeimages', '0');
-		}
-	
-	}
-    
-    
-    
-    echo '<div class="wrap">';
-    
-    screen_icon();
-    
-    echo '<h2>WP Attachments</h2>';
-	echo '<h3>OPTIONS</h3>';
-    
-    echo '<div id="welcome-panel" class="welcome-panel">';
-    
-    echo '<form method="post" name="options" target="_self">';
-    
-    settings_fields('wpatt_option_group');
-    
-    echo '
-
-	<table class="form-table">
-
-	
-
-        <tr valign="top">
-
-        <th scope="row">Label for list header</th>
-
-        <td><input type="text" name="wpatt_option_localization_n" value="';
-    
-    echo get_option('wpatt_option_localization');
-    
-    echo '" />&nbsp;Insert here the label you want to use for the title of the attachments list. Default "<b>Attachments</b>"</td></tr>';
-    
-        echo '<tr><th scope="row">Include Images?</th>
-        <td><input type="checkbox" name="wpatt_option_includeimages_n" ';
-    $wpatt_option_includeimages_get = get_option('wpatt_option_includeimages');
-    if ($wpatt_option_includeimages_get == '1') {
-		echo 'checked=\'checked\'';
-	}
-    echo '/>&nbsp;Check this if you want to include images (.jpg, .jpeg, .gif, .png) from being listed.</td>';
-    echo '</tr>';
-
-    echo '<tr><th scope="row">Show date?</th>
-        <td><input type="checkbox" name="wpatt_option_showdate_n" ';
-    $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
-    if ($wpatt_option_showdate_get == '1') {
-		echo 'checked=\'checked\'';
-	}
-    echo '/>&nbsp;Check this if you want to show when the file has been uploaded.</td>';
-    echo '</tr></table>';
-    
-    
-    
-    echo '</table><p class="submit"><input type="submit" class="button-primary" name="Submit" value="Update" /></p>';
-    
-    echo '</form></div>
-	<h3>HELP, SUPPORT & FEEDBACK</h3>
-	<a href="http://wordpress.org/plugins/wp-attachments/" title "WP Attachments Wordpress Plugin>http://wordpress.org/plugins/wp-attachments/</a><br/>
-	This plugin is continuously developed by Marco Milesi focusing on simplicity, intuitiveness and cleanness. Keep updated :)<br/>
-	Thank You for using this plugin.</div>';
-    
-    }
 
 ?>

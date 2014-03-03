@@ -1,0 +1,40 @@
+#ij-post-attachments img.loader {
+	padding-left: 3px;
+	vertical-align: middle;
+}
+
+.ij-post-attachment {
+	float: left;
+
+	width: 100%;
+	height: 80px;
+
+	margin: 0 10px 10px 0;
+	border: 1px solid #CCC;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	background: #FAFAFA;
+
+	font-family: Arial, sans-serif;
+
+	cursor: move;
+}
+
+.ij-post-attachment:hover {
+	border: solid 1px #CCC;
+	box-shadow: 1px 1px 5px #999;
+}
+
+.ij-post-attachment-title {
+	padding: 5px;
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+	background: url('../../../../wp-admin/images/gray-grad.png') repeat-x;
+}
+
+.ij-post-attachment-title, .ij-post-attachment-type { display: block }
+.ij-post-attachment-type { font-size: 11px; margin-bottom: 2px }
+.ij-post-attachment img { float: left; margin-right: 5px; cursor: default }
