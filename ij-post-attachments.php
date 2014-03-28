@@ -83,8 +83,11 @@ class IJ_Post_Attachments
 	 */
 	public function add_meta_boxes()
 	{
+		$pid = isset($_GET['post']) ? $_GET['post'] : 0;
+		if ($pid == '0' || $pid == NULL) { return; } //Skip the attachments list if POST ID is null
+		
 		add_meta_box(
-			'ij-post-attachments', __('Images and Attachments') . ' - WP Attachments',
+			'ij-post-attachments', __('Images and Attachments'),
 			array($this, 'printMetaBox'), null, 'normal', 'high'
 		);
 	}
@@ -135,6 +138,8 @@ class IJ_Post_Attachments
 	 */
 	public function printMetaBox($post)
 	{
+		if ($post->ID == '0' || $post->ID == NULL) { return; } //Skip the attachments list if POST ID is null
+		
 		$attachments = new WP_Query(array(
 			'post_parent'   => $post->ID,
 			'post_type'     => 'attachment',

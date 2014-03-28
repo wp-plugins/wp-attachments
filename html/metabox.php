@@ -16,7 +16,7 @@
 			    data-title="<?php echo esc_attr($atchment->post_title); ?>">
 
 				<!--Item title-->
-				<div class="ij-post-attachment-title" title="<?php echo esc_attr($atchment->post_title); ?>">
+				<div class="ij-post-attachment-title">
 					<h3>
 					
 					<div style="float:left;">
@@ -31,6 +31,12 @@
 						<a href="<?php echo get_delete_post_link($atchment->ID); ?>"  onclick = "if (! confirm('<?php _e('Are you sure you want to do this?');?>')) { return false; }"><?php _e('Remove'); ?></a>
 					</div>
 					
+					<?php
+					$wpatt_option_includeimages_get = get_option('wpatt_option_includeimages');
+					if (!($wpatt_option_includeimages_get == '1' && wp_attachment_is_image($atchment->ID))) {
+						echo '<img title="This file will be listed in the front-end" src="' . plugin_dir_url(__FILE__) . 'eye.png"/>';
+					}
+					?>
 					<?php echo (strlen($atchment->post_title) > 22) ? (substr(esc_html($atchment->post_title), 0, 22) . '...') : esc_html($atchment->post_title); ?></h3>
 				</div>
 
@@ -51,6 +57,7 @@
 			<?php endwhile; ?>
 		</ul>
 		<div class="clear"></div>
+		<small>Powered by WordPress WP Attachments</small>
 	</div>
 	<?php else: ?>
 	<p><?php _e('No media attachments found.'); ?></p>
