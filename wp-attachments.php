@@ -4,14 +4,14 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.2.4
+Version: 3.3
 Author URI: http://marcomilesi.ml
 */
 
 function wpa_action_init()
 {
 	load_plugin_textdomain( 'wp-attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-	update_option( 'wpa_version_number', '3.2.4' );
+	update_option( 'wpa_version_number', '3.3' );
 	wp_enqueue_style('wpa-css', plugin_dir_url(__FILE__) . 'styles/frontend.css');
 }
 
@@ -91,7 +91,13 @@ function wpatt_job_cpt_template_filter($content)
 			
             $class = "post-attachment mime-" . sanitize_title($attachment->post_mime_type);
             
-            $content_l .= '<li class="' . $class . '"><a href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . wpatt_format_bytes(filesize(get_attached_file($attachment->ID)));
+			 $wpatt_option_targetblank_get = get_option('wpatt_option_targetblank');
+	
+            $content_l .= '<li class="' . $class . '"><a ';
+			
+			if ($wpatt_option_targetblank_get == '1') { $content_l .= 'target="_blank" '; }
+			
+			$content_l .= 'href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . wpatt_format_bytes(filesize(get_attached_file($attachment->ID)));
 
   
             $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
@@ -132,6 +138,8 @@ function wpatt_reg_settings()
     register_setting('wpatt_options_group', 'wpatt_option_localization');
 	
 	register_setting('wpatt_options_group', 'wpatt_disable_backend');
+	
+	register_setting('wpatt_options_group', 'wpatt_option_targetblank', 'intval');
     
     /* Preopulate 'Attachments' */
     

@@ -29,6 +29,12 @@
 		} else {
 			update_option('wpatt_option_includeimages', '0');
 		}
+		
+		if (isset($_POST['wpatt_option_targetblank_n'])) {
+            update_option('wpatt_option_targetblank', '1');
+		} else {
+			update_option('wpatt_option_targetblank', '0');
+		}
 	
 	}
     
@@ -91,6 +97,15 @@
 		echo 'checked=\'checked\'';
 	}
     echo '/>&nbsp;' . __('Check this if you want to show the date of file upload','wp-attachments') . '</td>';
+    echo '</tr>';
+	
+	echo '<tr><th scope="row">' . __('Open in new tab','wp-attachments') . '</th>
+        <td><input type="checkbox" name="wpatt_option_targetblank_n" ';
+    $wpatt_option_targetblank_get = get_option('wpatt_option_targetblank');
+    if ($wpatt_option_targetblank_get == '1') {
+		echo 'checked=\'checked\'';
+	}
+    echo '/>&nbsp;' . __('Check this option if you want to add target="_blank" to every file listed in order to open it in a new tab','wp-attachments') . '</td>';
     echo '</tr></table>';
     
     
