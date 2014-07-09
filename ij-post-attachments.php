@@ -87,7 +87,7 @@ class IJ_Post_Attachments
 		if ($pid == '0' || $pid == NULL) { return; } //Skip the attachments list if POST ID is null
 		
 		add_meta_box(
-			'ij-post-attachments', __('Images and Attachments'),
+			'ij-post-attachments', __('Media'),
 			array($this, 'printMetaBox'), null, 'normal', 'high'
 		);
 	}
