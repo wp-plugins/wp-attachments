@@ -53,12 +53,12 @@
 		</ul>
 		<div class="clear"></div>
 	</div>
-	<center>
-			<a href="<?php echo admin_url('media-upload.php?post_id=' . $post->ID); ?>&TB_iframe=1&width=640&height=693"
-				onclick="return false" class="button-primary thickbox">
-				<?php _e('Add Media'); ?>
-			</a>
-	</center>
 	<?php else: ?>
 	<p><?php _e('No media attachments found.'); ?></p>
 	<?php endif; ?>
+	<div id="wp-content-media-buttons" style="float:none;" class="wp-media-buttons">
+		<center>
+			<a href="#" id="insert-media-button" class="button insert-media add_media" data-editor="content"><span class="wp-media-buttons-icon"></span> <?php _e('Add Media'); ?></a>
+		</center>
+		<div class="clear"></div>
+	</div>
