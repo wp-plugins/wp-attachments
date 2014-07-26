@@ -83,6 +83,12 @@ class IJ_Post_Attachments
 	 */
 	public function add_meta_boxes()
 	{
+		$pid = isset($_GET['post']) ? $_GET['post'] : 0;
+		global $pagenow;
+		if (!(in_array( $pagenow, array( 'post-new.php' ) )) && ($pid == '0' || $pid == NULL)) {
+			return; //Additional check to avoid showing the metabox in not-intended pages (ex. Members Plugin)
+		}
+
 		add_meta_box(
 			'ij-post-attachments', __('Media'),
 			array($this, 'printMetaBox'), null, 'normal', 'high'

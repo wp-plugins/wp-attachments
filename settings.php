@@ -110,7 +110,7 @@
     
     
     
-    echo '</table><p class="submit"><input type="submit" class="button-primary" name="Submit" value="Update" /></p>';
+    echo '</table><p class="submit"><input type="submit" class="button-primary" name="Submit" value="' . __('Save') . '" /></p>';
     
     echo '</form></div>
 	<h3>' . __('Help, Support & Feedback','wp-attachments') . '</h3>
