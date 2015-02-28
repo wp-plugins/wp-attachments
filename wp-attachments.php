@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.6
+Version: 3.6.1
 Author URI: http://marcomilesi.ml
 */
 
@@ -66,7 +66,7 @@ function wpatt_job_cpt_template_filter($content)
     $somethingtoshow = 0;
     $content_l = null;
 
-    if ($post->ID == '0' || $post->ID == NULL || get_post_meta($post->ID, 'wpa_off', true)) { return $content; }
+    if ($post->ID == '0' || $post->ID == NULL || get_post_meta($post->ID, 'wpa_off', true) || post_password_required() ) { return $content; }
 
     $attachments = get_posts(array(
         'post_type' => 'attachment',
