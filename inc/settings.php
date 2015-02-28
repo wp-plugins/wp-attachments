@@ -41,36 +41,26 @@
     
     
     echo '<div class="wrap">';
-    
-    screen_icon();
 	
 	echo '<div style="float:right;">
 		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 		<input type="hidden" name="cmd" value="_s-xclick">
 		<input type="hidden" name="hosted_button_id" value="F2JK36SCXKTE2">
-		<input type="image" src="https://www.paypalobjects.com/it_IT/IT/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - Il metodo rapido, affidabile e innovativo per pagare e farsi pagare.">
-		<img alt="" border="0" src="https://www.paypalobjects.com/it_IT/i/scr/pixel.gif" width="1" height="1">
+		<input type="image" src="https://www.paypalobjects.com/webstatic/en_US/btn/btn_donate_pp_142x27.png" border="0" name="submit" alt="PayPal - Il metodo rapido, affidabile e innovativo per pagare e farsi pagare.">
 		</form>
 		</div>';
     
-    echo '<h2>WP Attachments ' . get_option('wpa_version_number') . ' <a href="http://wordpress.org/support/view/plugin-reviews/wp-attachments" target="_blank" class="add-new-h2"><em>Rate this plugin!</em></a><a href="http://wordpress.org/plugins/wp-attachments/changelog/" target="_blank" class="add-new-h2"><em>Changelog</em></a></h2>';
-	
-	echo '<h3>';
-	_e('Options','wp-attachments');
-	echo '</h3>';
+    echo '<h2><strong>WP Attachments</strong><small> ' . get_option('wpa_version_number') . '</small> <a href="http://wordpress.org/support/view/plugin-reviews/wp-attachments" target="_blank" class="add-new-h2">Rate this plugin</a><a href="http://wordpress.org/plugins/wp-attachments/changelog/" target="_blank" class="add-new-h2">Changelog</a></h2>';
     
-    echo '<div id="welcome-panel" class="welcome-panel">';
-    
-    echo '<form method="post" name="options" target="_self">';
+    echo '<form method="post" name="options" target="_self">
+            <div id="welcome-panel" class="welcome-panel" style="padding: 5px 20px;">';
     
     settings_fields('wpatt_option_group');
     
     echo '
 
 	<table class="form-table">
-
-	
-
+    
         <tr valign="top">
 
         <th scope="row">' . __('List Title','wp-attachments') . '</th>
@@ -110,11 +100,18 @@
     
     
     
-    echo '</table><p class="submit"><input type="submit" class="button-primary" name="Submit" value="' . __('Save') . '" /></p>';
+    echo '</table></div>
+    <div style="float:right;">
+    <iframe src="//www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2FWPGov&amp;width&amp;height=258&amp;colorscheme=light&amp;show_faces=true&amp;header=false&amp;stream=false&amp;show_border=false&amp;appId=262031607290004" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:258px;" allowTransparency="true"></iframe>
+    </div>
+    <p class="submit"><input type="submit" class="button-primary" name="Submit" value="' . __('Save Changes') . '" /></p></form>
     
-    echo '</form></div>
-	<h3>' . __('Help, Support & Feedback','wp-attachments') . '</h3>
-	<a href="http://wordpress.org/plugins/wp-attachments/" title "WP Attachments Wordpress Plugin>http://wordpress.org/plugins/wp-attachments/</a><br/>' . __('This plugin is mantained by <a href=\"http://marcomilesi.ml\" title=\"Marco Milesi\">Marco Milesi</a> and is based on simplicity and intuitiveness. Keep it updated :)<br/>Thank You for using WP Attachments!','wp-attachments') . '</div>';
+    <div class="wrap about-wrap"><div class="about-text">
+        <a href="http://wordpress.org/plugins/wp-attachments/" title "WP Attachments Wordpress Plugin>http://wordpress.org/plugins/wp-attachments/</a><br>
+        Thank You for using this plugin!<br>
+        If you like it, please leave a review or consider make a donation to keep it alive<br>
+        <small><a href="http://marcomilesi.ml">Developed by Marco Milesi</a> &bull; <a href="http://facebook.com/WPGov">Follow us on Facebook</a></small>
+    </div></div>';
     
     }
 ?>

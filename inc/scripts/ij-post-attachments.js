@@ -3,7 +3,7 @@ var IJ_Post_Attachments;
 	$(document).ready(function() {
 		IJ_Post_Attachments = new InJoin_PostAttachments();
 	});
-
+	
 	/**
 	 * @class
 	 * @constructor
@@ -78,9 +78,10 @@ var IJ_Post_Attachments;
 					}
 
 					loader
-						.attr('src', userSettings.url + 'wp-admin/images/wpspin_light.gif')
+						.attr('src', userSettings.url + 'wp-content/plugins/wp-attachments/inc/load.gif')
 						.addClass('loader')
 						.appendTo(self.container.find('h3.hndle'));
+						self.container.find('h3.hndle span').hide();
 
 					$.ajax({
 						url : ajaxurl,
@@ -90,38 +91,12 @@ var IJ_Post_Attachments;
 						}
 					}).always(function() {
 						self.container.find('h3.hndle img').remove();
+						self.container.find('h3.hndle span').show();
 					});
 				}
 			}, 1500);
 		};
-
-		/**
-		 * Insert an attachment in the editor.
-		 * @type    {Function}
-		 * @return  {Boolean}
-		 */
-		this.insertAttachment = function() {
-			var LI = $(this).parents().filter('li:first'),
-				el;
-
-			if (LI.data('mimetype').indexOf('image/') === 0) {
-				el = $('<img />')
-					.addClass('alignnone size-full wp-image-' + LI.data('attachmentid'))
-					.attr({
-						alt     : LI.data('alt'),
-						src     : LI.data('url'),
-						title   : LI.data('title')
-					});
-			} else {
-				el = $('<a/>')
-						.text(LI.data('title'))
-						.attr('href', LI.data('url'));
-			}
-
-			send_to_editor(el[0].outerHTML);
-			return false;
-		};
-
+		
 		/**
 		 * Opens the ThickBox with the media editing screen
 		 * @type    {Function}
@@ -151,16 +126,11 @@ var IJ_Post_Attachments;
 				// The line below will make WP redirect to our plugin after the deletion.
 				// That way, less data will be downloaded.
 				data : { _wp_http_referer   : self.pluginUrl + 'ij-post-attachments.php' }
-			}).done(function(ret) {
-				if (!ret) {
-					$(this.parentNode.parentNode).fadeOut(300, function() {
-						$(this).remove();
-					});
-				}
 			});
+			$(this).parent().parent().parent().fadeOut();
 			return false;
 		};
-
+		
 		/**
 		 * Sets up the widgets and events
 		 * @type    {Function}
@@ -176,13 +146,7 @@ var IJ_Post_Attachments;
 			}).disableSelection();
 
 			// Apply the syoHint plugin
-			$('li.ij-post-attachment').autoHint();
-
-			// Bind the Insert Attachment behavior
-			$('a.ij-post-attachment-insert').click(function() {
-				self.insertAttachment.call(this);
-				return false;
-			});
+			//$('li.ij-post-attachment').autoHint();
 
 			// Bind the Show Attachment behavior to the title and to the Edit links
 			$('a.ij-post-attachment-edit').click(function() {

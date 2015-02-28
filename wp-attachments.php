@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.5.7
+Version: 3.6
 Author URI: http://marcomilesi.ml
 */
 
@@ -17,9 +17,9 @@ function wpa_action_init()
 
 // Add actions
 add_action('init', 'wpa_action_init');
-require_once(plugin_dir_path(__FILE__) . 'settings.php');
-require_once(plugin_dir_path(__FILE__) . 'ij-post-attachments.php');
-require_once(plugin_dir_path(__FILE__) . 'attach_unattach_reattach.php');
+require_once(plugin_dir_path(__FILE__) . 'inc/settings.php');
+require_once(plugin_dir_path(__FILE__) . 'inc/ij-post-attachments.php');
+require_once(plugin_dir_path(__FILE__) . 'inc/attach_unattach_reattach.php');
 
 function wpatt_format_bytes($a_bytes)
     {
@@ -66,7 +66,7 @@ function wpatt_job_cpt_template_filter($content)
     $somethingtoshow = 0;
     $content_l = null;
 
-    if ($post->ID == '0' || $post->ID == NULL) { return $content; } //Skip the attachments list if POST ID is null
+    if ($post->ID == '0' || $post->ID == NULL || get_post_meta($post->ID, 'wpa_off', true)) { return $content; }
 
     $attachments = get_posts(array(
         'post_type' => 'attachment',
@@ -137,9 +137,10 @@ function wpatt_job_cpt_template_filter($content)
 add_action('admin_init', 'wpatt_reg_settings');
 
 function wpatt_reg_settings() {
-        register_setting('wpatt_options_group', 'wpatt_option_showdate', 'intval');
+    
+    register_setting('wpatt_options_group', 'wpatt_option_showdate', 'intval');
     register_setting('wpatt_options_group', 'wpatt_option_includeimages', 'intval');
-        register_setting('wpatt_options_group', 'wpatt_option_localization');
+    register_setting('wpatt_options_group', 'wpatt_option_localization');
     register_setting('wpatt_options_group', 'wpatt_disable_backend');
     register_setting('wpatt_options_group', 'wpatt_option_targetblank', 'intval');
 

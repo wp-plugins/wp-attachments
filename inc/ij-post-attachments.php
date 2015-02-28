@@ -107,10 +107,9 @@ class IJ_Post_Attachments
 		if ($hook_suffix != 'post.php')
 			return;
 
-		wp_enqueue_script('syoHint', IJ_POST_ATTACHMENTS_URL . 'scripts/jquery.syoHint.js', array('jquery'), '1.0.10');
 		wp_enqueue_script(
 			'ij-post-attachments', IJ_POST_ATTACHMENTS_URL . 'scripts/ij-post-attachments.js',
-			array('syoHint', 'jquery-ui-sortable'), IJ_POST_ATTACHMENTS_VER
+			array('jquery-ui-sortable'), IJ_POST_ATTACHMENTS_VER
 		);
 
 		wp_localize_script('ij-post-attachments', 'IJ_Post_Attachments_Vars', array(
@@ -147,7 +146,8 @@ class IJ_Post_Attachments
 			'post_type'     => 'attachment',
 			'post_status'   => 'any',
 			'orderby'       => 'menu_order',
-			'order'         => 'ASC'
+			'order'         => 'ASC',
+            'posts_per_page' => -1
 		));
 
 		include IJ_POST_ATTACHMENTS_DIR . '/html/metabox.php';
@@ -237,3 +237,17 @@ class IJ_Post_Attachments
 }
 
 $IJ_Post_Attachments = IJ_Post_Attachments::getInstance();
+
+add_action( 'save_post', 'wpa_meta_box_save' );
+function wpa_meta_box_save( $post_id )
+{
+    
+    // Bail if we're doing an auto save
+    if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
+     
+    // if our current user can't edit this post, bail
+    if( !current_user_can( 'edit_post' ) ) return;
+    
+    update_post_meta($post_id, "wpa_off", $_POST["wpa_off"]);
+}
+?>
