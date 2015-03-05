@@ -4,14 +4,14 @@ Plugin Name: WP Attachments
 Plugin URI: http://marcomilesi.ml
 Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
 Author: Marco Milesi
-Version: 3.6.1
+Version: 3.7
 Author URI: http://marcomilesi.ml
 */
 
 function wpa_action_init()
 {
     load_plugin_textdomain( 'wp-attachments', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-    update_option( 'wpa_version_number', '3.5.7' );
+    update_option( 'wpa_version_number', '3.7' );
     wp_enqueue_style('wpa-css', plugin_dir_url(__FILE__) . 'styles/frontend.css');
 }
 
@@ -21,52 +21,35 @@ require_once(plugin_dir_path(__FILE__) . 'inc/settings.php');
 require_once(plugin_dir_path(__FILE__) . 'inc/ij-post-attachments.php');
 require_once(plugin_dir_path(__FILE__) . 'inc/attach_unattach_reattach.php');
 
-function wpatt_format_bytes($a_bytes)
-    {
+function wpatt_format_bytes($a_bytes) {
 
-    if ($a_bytes < 1024)
-        {
-
-        return '< 1KB';
-
-        }
-    elseif ($a_bytes < 1048576)
-        {
-
-        return round($a_bytes / 1024, 2) . ' KB';
-
-        }
-    elseif ($a_bytes < 1073741824)
-        {
-
+    if ($a_bytes < 1024) {
+        return '< 1kB';
+    } elseif ($a_bytes < 1048576) {
+        return round($a_bytes / 1024, 2) . ' kB';
+    } elseif ($a_bytes < 1073741824) {
         return round($a_bytes / 1048576, 2) . ' MB';
-
-        }
-    elseif ($a_bytes < 1099511627776)
-        {
-
+    } elseif ($a_bytes < 1099511627776) {
         return round($a_bytes / 1073741824, 2) . ' GB';
-
-        }
-    else
-        {
-
+    } else {
         return round($a_bytes / 1208925819614629174706176, 2) . ' ERROR';
-
-        }
-
     }
 
+}
 
-add_filter('the_content', 'wpatt_job_cpt_template_filter');
 
-function wpatt_job_cpt_template_filter($content)
+add_filter('the_content', 'wpatt_content_filter');
+
+function wpatt_content_filter($content)
     {
     global $post;
     $somethingtoshow = 0;
     $content_l = null;
+    
+    $checkrestrict = false;
+    if ( get_option('wpatt_option_restrictload') && !is_single() && !is_page() ) { $checkrestrict = true; }
 
-    if ($post->ID == '0' || $post->ID == NULL || get_post_meta($post->ID, 'wpa_off', true) || post_password_required() ) { return $content; }
+    if ($post->ID == '0' || $post->ID == NULL || get_post_meta($post->ID, 'wpa_off', true) || post_password_required() || $checkrestrict ) { return $content; }
 
     $attachments = get_posts(array(
         'post_type' => 'attachment',
@@ -105,21 +88,14 @@ function wpatt_job_cpt_template_filter($content)
                 $wpatt_fs = 'not found';
             }
 
-            $content_l .= 'href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> (' . $wpatt_fs;
+            $content_l .= 'href="' . wp_get_attachment_url($attachment->ID) . '">' . $attachment->post_title . '</a> <small>(' . $wpatt_fs . ') </small>';
 
-
-            $wpatt_option_showdate_get = get_option('wpatt_option_showdate');
-
-            if ($wpatt_option_showdate_get == '1')
-                {
-
+            if (get_option('wpatt_option_showdate') == '1') {
                 $wpatt_date = new DateTime($attachment->post_date);
-
                 $content_l .= '<div style="float:right;">' . $wpatt_date->format('d.m.Y') . '</div>';
-
-                }
-
-            $content_l .= ')</li>';
+            }
+            
+            $content_l .= '</li>';
 
             }
         $content_l .= '</ul></div>';

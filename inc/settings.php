@@ -35,6 +35,12 @@
 		} else {
 			update_option('wpatt_option_targetblank', '0');
 		}
+        
+        if (isset($_POST['wpatt_option_restrictload_n'])) {
+            update_option('wpatt_option_restrictload', '1');
+		} else {
+			update_option('wpatt_option_restrictload', '0');
+		}
 	
 	}
     
@@ -96,6 +102,15 @@
 		echo 'checked=\'checked\'';
 	}
     echo '/>&nbsp;' . __('Check this option if you want to add target="_blank" to every file listed in order to open it in a new tab','wp-attachments') . '</td>';
+    echo '</tr>';
+        
+    echo '<tr><th scope="row">' . __('Restrict loading','wp-attachments') . '</th>
+        <td><input type="checkbox" name="wpatt_option_restrictload_n" ';
+    $wpatt_option_targetblank_get = get_option('wpatt_option_restrictload');
+    if ($wpatt_option_targetblank_get == '1') {
+		echo 'checked=\'checked\'';
+	}
+    echo '/>&nbsp;' . __('Check this option if you want to restrict the plugin to single or page views (not archive or other views)','wp-attachments') . '</td>';
     echo '</tr></table>';
     
     
