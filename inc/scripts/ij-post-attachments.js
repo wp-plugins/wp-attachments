@@ -1,9 +1,10 @@
 var IJ_Post_Attachments;
 (function($) {
+	
 	$(document).ready(function() {
 		IJ_Post_Attachments = new InJoin_PostAttachments();
 	});
-	
+
 	/**
 	 * @class
 	 * @constructor
@@ -12,7 +13,7 @@ var IJ_Post_Attachments;
 		"use strict";
 
 		var self = this;
-
+		
 		/**
 		 * Container of the items list
 		 * @type {jQuery}
@@ -23,7 +24,7 @@ var IJ_Post_Attachments;
 		 * The URL of the plugin's directory
 		 * @type {String}
 		 */
-		this.pluginUrl = userSettings.url + 'wp-content/plugins/ij-post-attachments/';
+		this.pluginUrl = userSettings.url + 'wp-content/plugins/wp-attachments/';
 
 		/**
 		 * The "Edit Media" title.
@@ -94,7 +95,7 @@ var IJ_Post_Attachments;
 						self.container.find('h3.hndle span').show();
 					});
 				}
-			}, 1500);
+			}, 500);
 		};
 		
 		/**
@@ -127,7 +128,7 @@ var IJ_Post_Attachments;
 				// That way, less data will be downloaded.
 				data : { _wp_http_referer   : self.pluginUrl + 'ij-post-attachments.php' }
 			});
-			$(this).parent().parent().parent().fadeOut();
+			$(this).parent().parent().parent().parent().parent().fadeOut();
 			return false;
 		};
 		
@@ -147,7 +148,7 @@ var IJ_Post_Attachments;
 
 			// Apply the syoHint plugin
 			//$('li.ij-post-attachment').autoHint();
-
+			
 			// Bind the Show Attachment behavior to the title and to the Edit links
 			$('a.ij-post-attachment-edit').click(function() {
 				self.showAttachment.call(this);
@@ -156,7 +157,9 @@ var IJ_Post_Attachments;
 
 			// Bind the Remove Attachment behavior to the Remove link
 			$('a.ij-post-attachment-delete').click(function() {
-				self.removeAttachment.call(this);
+				if ( confirm(IJ_Post_Attachments_Vars.youSure) ) { 
+					self.removeAttachment.call(this);
+				}
 				return false;
 			});
 		};

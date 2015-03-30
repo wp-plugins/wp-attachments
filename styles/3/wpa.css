@@ -1,0 +1,12 @@
+ul.post-attachments{list-style:none;margin:0;}
+li.post-attachment{background:url(document.png) 0 4px no-repeat;padding-left:24px;}
+.post-attachment.mime-imagejpeg,.post-attachment.mime-imagepng,.post-attachment.mime-imagejpeg,.post-attachment.mime-imagegif{background-image:url(document-image.png);}
+.post-attachment.mime-applicationzip{background-image:url(document-zipper.png);}
+.post-attachment.mime-applicationpdf{background-image:url(document-pdf.png);}
+.post-attachment.mime-applicationvnd-ms-excel{background-image:url(document-excel.png);}
+.post-attachment.mime-applicationvnd-openxmlformats-officedocument-spreadsheetml-sheet{background-image:url(document-excel.png);}
+.post-attachment.mime-applicationmsword{background-image:url(document-word.png);}
+.post-attachment.mime-applicationvnd-openxmlformats-officedocument-wordprocessingml-document{background-image:url(document-word.png);}
+.post-attachment.mime-applicationvnd-oasis-opendocument-spreadsheet{background-image:url(document-ods.png);}
+.post-attachment.mime-applicationvnd-oasis-opendocument-text{background-image:url(document-odt.png);}
+.post-attachment.mime-audiompeg{background-image:url(document-music.png);}';

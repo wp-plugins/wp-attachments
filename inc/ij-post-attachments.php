@@ -114,6 +114,7 @@ class IJ_Post_Attachments
 
 		wp_localize_script('ij-post-attachments', 'IJ_Post_Attachments_Vars', array(
 			'editMedia' => __('Edit Media'),
+            'youSure' => __('Are you sure you want to do this?'),
 			'postID'    => isset($_GET['post']) ? $_GET['post'] : 0
 		));
 	}
