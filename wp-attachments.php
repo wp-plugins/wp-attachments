@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: WP Attachments
-Plugin URI: http://marcomilesi.ml
-Description: Automatically shows your attachments under every post and page content. Simple. Automatic. Easy. As it has to be!
+Plugin URI: http://wpgov.it
+Description: Light and powerful solution to manage WordPress files.
 Author: Marco Milesi
-Version: 4.0.1
+Version: 4.0.2
 Author URI: http://marcomilesi.ml
 */
 
@@ -19,9 +19,9 @@ function wpa_action_init()
                 if (!$newcounter) { $newcounter = 0; }
                 $newcounter++;
                 update_post_meta($_GET['download'], 'wpa-download', $newcounter );
-                wp_redirect(esc_url(wp_get_attachment_url($_GET['download'])));
-                exit;
             }
+            wp_redirect(esc_url_raw(wp_get_attachment_url($_GET['download'])));
+            exit;
         }
     }
     

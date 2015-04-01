@@ -48,7 +48,7 @@
                            onclick = "if (! confirm('<?php _e('Are you sure you want to do this?');?>')) { return false; }" title="<?php echo _e('Unattach','wp-attachments'); ?>">
                             <span class="dashicons dashicons-editor-unlink"></span>
                         </a>
-                        <a href="<?php echo get_delete_post_link($atchment->ID);?>" class="button button-small ij-post-attachment-delete" title="<?php _e('Remove'); ?>">
+                        <a href="<?php echo get_delete_post_link($atchment->ID);?>" class="button button-small ij-post-attachment-delete" title="<?php _e('Delete'); ?>">
                             <span class="dashicons dashicons-trash"></span>
                         </a>
                     </td>
