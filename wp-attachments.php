@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://wpgov.it
 Description: Light and powerful solution to manage WordPress files.
 Author: Marco Milesi
-Version: 4.0.2
+Version: 4.1
 Author URI: http://marcomilesi.ml
 */
 
@@ -14,7 +14,13 @@ function wpa_action_init()
 {
     if (get_option('wpatt_counter') && isset($_GET['download']) ) {
         if ( !is_attachment() ) {
-            if ( wpa_is_valid_download($_GET['download']) ) {
+            
+            $excludelogged = true;
+            if ( get_option('wpatt_excludelogged_counter') ) { //voglio escludere
+                $excludelogged =  !is_user_logged_in();
+            }
+                
+            if ( $excludelogged && wpa_is_valid_download($_GET['download']) ) {
                 $newcounter = get_post_meta($_GET['download'], "wpa-download", true);
                 if (!$newcounter) { $newcounter = 0; }
                 $newcounter++;
@@ -114,7 +120,7 @@ function wpatt_content_filter($content)
                     $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>(%SIZE%)</small> <div style="float:right;">%DATE%</div>';
                     break;
                 case 2: //EXTENDED
-                    $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>(%SIZE%)</small> <div style="float:right;">%DATE%</div>';
+                    $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>&bull; %SIZE% &bull; %DOWNLOADS% click</small> <div style="float:right;">%DATE%</div><br><small>%CAPTION%</small>';
                     break;
                 case 3: //CUSTOM
                     $wpattachments_string =  html_entity_decode( get_option('wpa_template_custom') );
@@ -137,6 +143,7 @@ function wpatt_content_filter($content)
             $wpattachments_string = str_replace("%SIZE%", $wpatt_fs, $wpattachments_string);
             $wpattachments_string = str_replace("%DATE%", $wpatt_date->format(get_option('wpatt_option_date_localization')), $wpattachments_string);
             $wpattachments_string = str_replace("%CAPTION%", $attachment->post_excerpt, $wpattachments_string);
+            $wpattachments_string = str_replace("%DESCRIPTION%", $attachment->post_content, $wpattachments_string);
             $wpattachments_string = str_replace("%AUTHOR%", get_the_author_meta( 'display_name', $attachment->post_author), $wpattachments_string);
             
             $wpattachments_string = str_replace("%DOWNLOADS%", wpa_get_downloads($attachment->ID), $wpattachments_string);

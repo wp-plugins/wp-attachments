@@ -41,11 +41,17 @@
 		} else {
 			update_option('wpatt_counter', '0');
 		}
+        if (isset($_POST['wpatt_excludelogged_counter_n'])) {
+            update_option('wpatt_excludelogged_counter', '1');
+		} else {
+			update_option('wpatt_excludelogged_counter', '0');
+		}
 	
-	} else if (isset($_POST['submit-appearance'])) {
+	}
+    if (isset($_POST['submit-appearance'])) {
         update_option('wpa_ict', $_POST['style']);
         update_option('wpa_template', $_POST['template']);
-        update_option('wpa_template_custom', htmlentities(stripslashes($_POST['wpa_template_custom'])));
+        update_option('wpa_template_custom', stripslashes($_POST['wpa_template_custom']));
     }
         wpa_register_initial_settings();
     
@@ -133,15 +139,23 @@
     echo '/>&nbsp;' . __('Check this option if you want to restrict the plugin to single or page views (not archive or other views)','wp-attachments') . '</td>';
     echo '</tr>';
        
-    echo '<tr><th scope="row">' . __('Enable download counter','wp-attachments') . '</th>
+    echo '<tr><th scope="row">' . __('Download counter','wp-attachments') . '</th>
         <td><input type="checkbox" name="wpatt_counter_n" ';
     $wpatt_counter_get = get_option('wpatt_counter');
     if ($wpatt_counter_get == '1') {
 		echo 'checked=\'checked\'';
 	}
-    echo '/>&nbsp;' . __('Check this option if you want to enable download counter','wp-attachments') . '</td>';
+    echo '/>&nbsp;' . __('Check this option if you want to enable download counter','wp-attachments') .
+        
+        
+    '<br><input type="checkbox" name="wpatt_excludelogged_counter_n" ';
+    $wpatt_counter_get = get_option('wpatt_excludelogged_counter');
+    if ($wpatt_counter_get == '1') {
+		echo 'checked=\'checked\'';
+	}
+    echo '/>&nbsp;' . __('Check this option to exclude logged-in users from the counter','wp-attachments') . '</td>';
     echo '</tr>';
-    
+       
     echo '</table>
     <p class="submit"><input type="submit" class="button-primary" name="submit-general" value="'.__('Save Changes').'" /></p>';
        
@@ -217,6 +231,7 @@
         <br>
         <label>
             <input type="radio" value="2" name="template" <?php if(get_option('wpa_template')==2){echo'checked=""';}?>> <strong>Extended</strong> 
+            <br><code>&lt;a href="%URL%">%TITLE%&lt;/a> &lt;small>&bull; %SIZE% &bull; %DOWNLOADS% click&lt;/small> &lt;div style="float:right;">%DATE%&lt;/div><br>&lt;br>&lt;small>%CAPTION%&lt;/small></code>
         </label>
         <br>
          <label>
@@ -236,7 +251,8 @@
             });
             </script>
             <textarea id="wpa_template_custom" name="wpa_template_custom" class="widefat" cols="50" rows="5" 
-                      <?php if(get_option('wpa_template')!=3){echo'style="display: none;" ';}?>/><?php echo html_entity_decode(get_option('wpa_template_custom')); ?></textarea>
+                <?php if(get_option('wpa_template')!=3){echo'style="display: none;" ';}?>/>
+                <?php echo html_entity_decode(get_option('wpa_template_custom')); ?></textarea>
             <p class="description">
     <h4>You can use HTML and the following placeholders:</h4>
         <style>
@@ -260,6 +276,11 @@
                     <td><strong>%CAPTION%</strong></td>
                     <td>The caption of the file</td>
                     <td><small>"My beautiful caption"</small></td>
+                </tr>
+                <tr>
+                    <td><strong>%DESCRIPTION%</strong></td>
+                    <td>The description of the file</td>
+                    <td><small>"My long beautiful description"</small></td>
                 </tr>
                 <tr>
                     <td><strong>%SIZE%</strong></td>
