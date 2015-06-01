@@ -4,7 +4,7 @@ Plugin Name: WP Attachments
 Plugin URI: http://wpgov.it
 Description: Light and powerful solution to manage WordPress files.
 Author: Marco Milesi
-Version: 4.1
+Version: 4.1.1
 Author URI: http://marcomilesi.ml
 */
 
