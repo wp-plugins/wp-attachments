@@ -2,9 +2,9 @@
 /*
 Plugin Name: WP Attachments
 Plugin URI: http://wpgov.it
-Description: Light and powerful solution to manage WordPress files.
+Description: Light and powerful solution to manage and show your WordPress download links in any post or page.
 Author: Marco Milesi
-Version: 4.1.1
+Version: 4.1.2
 Author URI: http://marcomilesi.ml
 */
 
@@ -14,12 +14,12 @@ function wpa_action_init()
 {
     if (get_option('wpatt_counter') && isset($_GET['download']) ) {
         if ( !is_attachment() ) {
-            
+
             $excludelogged = true;
             if ( get_option('wpatt_excludelogged_counter') ) { //voglio escludere
                 $excludelogged =  !is_user_logged_in();
             }
-                
+
             if ( $excludelogged && wpa_is_valid_download($_GET['download']) ) {
                 $newcounter = get_post_meta($_GET['download'], "wpa-download", true);
                 if (!$newcounter) { $newcounter = 0; }
@@ -30,7 +30,7 @@ function wpa_action_init()
             exit;
         }
     }
-    
+
     if (get_option('wpa_ict') > 0) { $wpa_ict = get_option('wpa_ict'); } else { $wpa_ict = 0; }
     wp_enqueue_style('wpa-css', plugin_dir_url(__FILE__) . 'styles/'.$wpa_ict.'/wpa.css');
 } add_action('init', 'wpa_action_init');
@@ -42,7 +42,7 @@ function wpa_action_admin_init()
     require_once(plugin_dir_path(__FILE__) . 'inc/settings.php');
     require_once(plugin_dir_path(__FILE__) . 'inc/ij-post-attachments.php');
     if (get_option('wpatt_counter')) { require_once(plugin_dir_path(__FILE__) . 'inc/counter.php'); }
-    
+
     $arraya_wpa_v = get_plugin_data ( __FILE__ );
     $nuova_versione = $arraya_wpa_v['Version'];
 
@@ -73,7 +73,7 @@ function wpatt_content_filter($content)
     global $post;
     $somethingtoshow = 0;
     $content_l = null;
-    
+
     $checkrestrict = false;
     if ( get_option('wpatt_option_restrictload') && !is_single() && !is_page() ) { $checkrestrict = true; }
 
@@ -89,7 +89,7 @@ function wpatt_content_filter($content)
 
     if ($attachments)
         {
-        
+
         $content_l .= '<!-- WP Attachments -->
         <div style="width:100%;margin:10px 0 10px 0;"><h3>' . get_option('wpatt_option_localization') . '</h3>
         <ul class="post-attachments">';
@@ -114,7 +114,7 @@ function wpatt_content_filter($content)
                 $wpatt_fs = 'ERROR';
             }
             $wpatt_date = new DateTime($attachment->post_date);
-            
+
             switch ( get_option('wpa_template') ) {
                 case 1: //STANDARD WITH DATE
                     $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>(%SIZE%)</small> <div style="float:right;">%DATE%</div>';
@@ -128,11 +128,11 @@ function wpatt_content_filter($content)
                 default: //DEFAULT
                     $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>(%SIZE%)</small>';
             }
-            
+
             if ( get_option('wpatt_option_targetblank') ) {
                 $wpattachments_string = str_replace('<a href', '<a target="_blank" href', $wpattachments_string);
             }
-            
+
             if ( get_option('wpatt_counter') ) {
                 $url = add_query_arg( 'download', $attachment->ID, get_permalink() );
             } else {
@@ -145,7 +145,7 @@ function wpatt_content_filter($content)
             $wpattachments_string = str_replace("%CAPTION%", $attachment->post_excerpt, $wpattachments_string);
             $wpattachments_string = str_replace("%DESCRIPTION%", $attachment->post_content, $wpattachments_string);
             $wpattachments_string = str_replace("%AUTHOR%", get_the_author_meta( 'display_name', $attachment->post_author), $wpattachments_string);
-            
+
             $wpattachments_string = str_replace("%DOWNLOADS%", wpa_get_downloads($attachment->ID), $wpattachments_string);
 
             $content_l .= '<li class="' . $class . '">' . $wpattachments_string . '</li>';
