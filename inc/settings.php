@@ -5,8 +5,6 @@
     
     if (!current_user_can('manage_options')) { wp_die(__('You do not have sufficient permissions to access this page.')); }
     
-    
-    
     if (isset($_POST['submit-general'])) {
         
         update_option('wpatt_option_localization', $_POST["wpatt_option_localization_n"]);

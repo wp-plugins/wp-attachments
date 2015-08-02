@@ -2,9 +2,9 @@
 /*
 Plugin Name: WP Attachments
 Plugin URI: http://wpgov.it
-Description: Light and powerful solution to manage and show your WordPress download links in any post or page.
+Description: Powerful solution to manage and show your WordPress media in any post or page.
 Author: Marco Milesi
-Version: 4.1.2
+Version: 4.2
 Author URI: http://marcomilesi.ml
 */
 
@@ -102,6 +102,11 @@ function wpatt_content_filter($content)
             } else if ( wp_attachment_is_image( $attachment->ID ) ) {
                 continue;
             }
+            
+            if ( !apply_filters( 'wpatt_accepted_formats', sanitize_title($attachment->post_mime_type) ) ) {
+                continue;
+            }
+            
             $somethingtoshow = 1;
 
             $class = "post-attachment mime-" . sanitize_title($attachment->post_mime_type);
@@ -129,6 +134,8 @@ function wpatt_content_filter($content)
                     $wpattachments_string = '<a href="%URL%">%TITLE%</a> <small>(%SIZE%)</small>';
             }
 
+            $wpattachments_string = apply_filters( 'wpatt_before_entry_html', $wpattachments_string );
+            
             if ( get_option('wpatt_option_targetblank') ) {
                 $wpattachments_string = str_replace('<a href', '<a target="_blank" href', $wpattachments_string);
             }
@@ -148,14 +155,14 @@ function wpatt_content_filter($content)
 
             $wpattachments_string = str_replace("%DOWNLOADS%", wpa_get_downloads($attachment->ID), $wpattachments_string);
 
-            $content_l .= '<li class="' . $class . '">' . $wpattachments_string . '</li>';
+            $content_l .= '<li class="' . $class . '">' . apply_filters( 'wpatt_after_entry_html', $wpattachments_string ) . '</li>';
 
             }
         $content_l .= '</ul></div>';
 
         }
         if ($somethingtoshow == 1) {
-            $content .= $content_l;
+            $content .= apply_filters( 'wpatt_list_html', $content_l );
         }
     return $content;
     }
